@@ -1,0 +1,227 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+:root {
+	--color-green:#8FE5BE;
+	--color-lite-blue:#1CCAFD;
+	--color-fiolet:#BE8FE5;
+	--color-pink:#FB97A3;
+	--color-jellow:#FCB55E;
+	--color-blue:#141625;
+}
+
+
+body{
+	background-color: var(--color-blue);
+	color: var(--color-jellow);
+}
+
+
+h2 {
+	margin: 0;
+	font-size: 20px;
+}
+
+.container {
+	max-width: 1200px;
+	padding: 0 20px;
+	box-sizing: content-box;
+	margin: auto;
+}
+
+
+header {
+	margin-bottom: 30px;
+}
+
+.navbar__navigation-li--a{
+	font-family: 'Lato',sans-serif;
+	font-size: 16px;
+	color: var(--color-jellow);
+	text-decoration: none;
+	font-weight: 400;
+}
+
+.navbar__navigation {
+	display: flex;
+	list-style: none;
+	width: 100%;
+	justify-content: space-between;
+	flex-direction: row;
+}
+
+
+.navbar__navigation{
+	/* display: inline; */
+}
+
+.navbar{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.navbar__buttons{
+	display: flex;
+	list-style: none;
+	column-gap: 10px;
+	flex-direction: row;
+}
+
+.card {
+	border: var(--color-fiolet) solid 4px;
+	padding: 12px;
+}
+
+
+.card-yellow {
+	border-color: var(--color-jellow);
+}
+
+.color-pink {
+	color: var(--color-pink);
+}
+.card-fiolet {
+	border-color: var(--color-fiolet);
+
+}
+.card-green {
+	color: green;
+	border-color: var(--color-green);
+}
+
+.card-blue {
+	border-color: var(--color-lite-blue);
+}
+
+.card-pink {
+	border-color: var(--color-pink);
+}
+
+.color-green {
+	color: var(--color-green);
+}
+
+.color-fiolet {
+	color: var(--color-fiolet);
+}
+
+.color-yellow  {
+	color: var(--color-jellow);
+}
+.color-blue {
+	color: var(--color-lite-blue);
+}
+
+
+input, select, button {
+	background: transparent;
+	color: inherit;
+	border: 0;
+	outline: none;
+	border: 1px solid currentColor;
+	padding: 7px 12px;
+}
+
+:root {
+	--font-body: "Lato", sans-serif;
+	--font-mono: 'Fira Mono', monospace;
+	--color-bg-0:  var(--color-lite-blue);
+	--color-bg-1: var(--color-blue);
+	--color-bg-2:  var(--color-fiolet);
+	--color-theme-1: #ff3e00;
+	--color-theme-2: #4075a6;
+	--color-text: rgba(0, 0, 0, 0.7);
+	--column-width: 42rem;
+	--column-margin-top: 4rem;
+	font-family: var(--font-body);
+	color: var(--color-text);
+}
+
+body {
+	min-height: 100vh;
+	margin: 0;
+	background-color: var(--color-bg-1);
+}
+
+h1,
+h2,
+p {
+	font-weight: 400;
+}
+
+p {
+	line-height: 1.5;
+}
+
+a {
+	color: var(--color-theme-1);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+h1 {
+	font-size: 2rem;
+	text-align: center;
+}
+
+/*h2 {*/
+/*	font-size: 1rem;*/
+/*}*/
+
+pre {
+	font-size: 16px;
+	font-family: var(--font-mono);
+	background-color: rgba(255, 255, 255, 0.45);
+	border-radius: 3px;
+	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
+	padding: 0.5em;
+	overflow-x: auto;
+	color: var(--color-text);
+}
+
+.text-column {
+	display: flex;
+	max-width: 48rem;
+	flex: 0.6;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0 auto;
+}
+
+input,
+button {
+	font-size: inherit;
+	font-family: inherit;
+}
+
+button:focus:not(:focus-visible) {
+	outline: none;
+}
+
+@media (min-width: 720px) {
+	h1 {
+		font-size: 2.4rem;
+	}
+}
+
+.visually-hidden {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: auto;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	white-space: nowrap;
+}
+
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import '@fontsource/fira-mono';

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+</body>
+</html>
+
+<script type="module">
+   import { createTransations, getTransactions} from './scripts/transactions.js'
+   import { createAccount, getAccounts } from './scripts/accounts.js'
+
+   let transactions = [];
+   let accounts = [];
+
+   const renderTransactions = (list) => {
+      let date = '';
+      let html = '';
+      for (let transaction of list ){
+
+
+         if (date != transaction.date){
+            let formattedData = new Date(transaction.date);
+
+
+            html += `<h3>${formattedData.toLocaleString('ru-RU', { month: "long" })} ${formattedData.getDate()}</h3>`;
+            date = transaction.date;
+         }
+
+         html += `
+            <div class='transaction'>
+               <span>
+                  Наличные
+               </span>
+               <span>
+                  Премия
+               </span>
+               <span class='color-green'>
+                  + ${transaction.amount || 0} ₽
+               </span>
+            </div>
+         `;
+      }
+      document.querySelector('.transactions--list').innerHTML = html;
+   }
+
+   getAccounts().then(res => {
+      accounts = res;
+
+      renderAccountOptions(res);
+      renderAccountList(res);
+   })
+
+
+   const renderAccountList = (list) => {
+      let html = '';
+
+      for (let i of list ){
+         html += `<li>
+         ${i.name}
+               <span class="color-blue">
+                  ${i.balance}р
+               </span>
+            </li>`
+      }
+
+      document.querySelector('.accounts--list').innerHTML = html;
+   }
+
+   const renderAccountOptions = (list) => {
+      let html = '';
+
+
+      for (let i of list ){
+         html += `<option value="${i.id}">
+            ${i.name}
+         </option>`
+      }
+      document.querySelector('#select-accounts').innerHTML = html;
+   }
+
+   getTransactions().then((res) => {
+      transactions = res;
+
+      console.log(res);
+
+
+      renderTransactions(transactions);
+   });
+
+   document.querySelector('.dohod-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+
+
+      createTransations(event.target['sum'].value, event.target['account'].value, event.target['category'].value);
+
+         getTransactions().then((res) => {
+         transactions = res;
+
+         renderTransactions(transactions);
+      });
+   })
+
+
+
+   function openForm()  {
+      let claslist = document.querySelector('#addAccount').classList;
+      console.log(claslist);
+
+
+      if (claslist.contains('hidden')) {
+         console.log('hid')
+         document.querySelector('#addAccount').classList.remove('hidden');
+      }else {
+         console.log('hid2')
+         document.querySelector('#addAccount').classList.add('hidden');
+      }
+
+   }
+
+   document.querySelector('#addAccount').addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const form = event.target;
+
+
+      createAccount(
+         form["name"].value,
+         form["sum"].value,
+      ).then(() => {
+         getAccounts().then(res => {
+            accounts = res;
+
+            renderAccountOptions(res);
+            renderAccountList(res);
+         })
+      })
+   })
+
+
+
+
+
+
+
+   document.querySelector('#openForm').addEventListener('click', openForm)
+</script>
