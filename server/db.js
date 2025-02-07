@@ -89,9 +89,10 @@ const Account = sequelize.define('Account', {
             allowNull: false,
         },
         balance: {
-            type: DataTypes.REAL,
+            type: DataTypes.STRING,
             allowNull: false,
-        },},
+        },
+    },
     {
         timestamps: false,
     },
@@ -112,9 +113,15 @@ const Goal = sequelize.define('Goal', {
             allowNull: false,
         },
         deadline: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.STRING,
             allowNull: true,
-        },},
+        },
+        startDate: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+    },
+
     {
         timestamps: false,
     },
@@ -129,6 +136,8 @@ User.hasMany(Category, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 Category.hasMany(Transaction, {foreignKey: 'category_id', onDelete: 'CASCADE'});
 Account.hasMany(Transaction, {foreignKey: 'account_id', onDelete: 'CASCADE'});
 
+Transaction.belongsTo(Account, {foreignKey: 'account_id'});
+Transaction.belongsTo(Category, {foreignKey: 'category_id'});
 
 
 

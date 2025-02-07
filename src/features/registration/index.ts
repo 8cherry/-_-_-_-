@@ -7,7 +7,11 @@ const doRegistrate = async (data: {email: string; name: string; password: string
     const result = await registerUser(data);
 
 
-    authStore.load(result.token)
+    console.log('token res ', result);
+    
+    authStore.load(result.token);
+
+    console.log('is auth ', authStore.isAuthorized());
 }
 
 

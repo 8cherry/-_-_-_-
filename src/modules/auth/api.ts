@@ -18,11 +18,11 @@ const getAuthToken = async (data: {email: string; password: string}) => {
     })
 
     if (response.status == 404) {
-        return alert("Пользователь не существует");
+        throw "Пользователь не существует";
     }
 
     if (response.status == 400) {
-        return alert("Неверный пароль");
+        throw "Неверный пароль";
     }
 
 

@@ -1,3 +1,7 @@
+
+import {PUBLIC_BACKEND_URL} from "$env/static/public";
+import {BackendFetch} from "$shared/api";
+
 export type TCategory = {
     id: string;
     name: string;
@@ -19,63 +23,18 @@ const getCategories = async (id: string) => {
 
 export async function getIncomeCategories() {
 
-    return [
-        {
-            id: 1,
-            name: 'Заработная плата'
-        },
-        {
-            id: 2,
-            name: 'Хобби',
-        },
-        {
-            id: 3,
-            name: 'Продажа',
-        },
-    ]
+    let response = await BackendFetch(PUBLIC_BACKEND_URL + '/categoryIn');
+ 
+ 
+     return response.json();
 }
 
 
 
 
 export async function getExpensesCategories() {
-
-    return [
-        {
-            id: 1,
-            name: 'Питание'
-        },
-        {
-            id: 2,
-            name: 'Транспорт',
-        },
-        {
-            id: 3,
-            name: 'Здоровье',
-        },
-        {
-            id: 4,
-            name: 'Красота',
-        },
-        {
-            id: 5,
-            name: 'Услуги',
-        },
-        {
-            id: 6,
-            name: 'Развлечения',
-        },
-        {
-            id: 7,
-            name: 'Одежда и обувь',
-        },
-        {
-            id: 8,
-            name: 'Образование и развитие',
-        },
-        {
-            id: 8,
-            name: 'Благотворительность и подарки',
-        },
-    ]
+    let response = await BackendFetch(PUBLIC_BACKEND_URL + '/categoryOut');
+ 
+ 
+    return response.json();
 }

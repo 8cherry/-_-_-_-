@@ -2,7 +2,7 @@
     import datepicker from 'js-datepicker';
     import 'js-datepicker/dist/datepicker.min.css';
 
-    let {value = $bindable(), } = $props();
+    let {value = $bindable(), placeholder=""} = $props();
 
 
     const picker = (node) => {
@@ -24,5 +24,5 @@
 
 </script>
 <div>
-    <input id="picker" use:picker value={value}/>
+    <input id="picker" placeholder={placeholder} use:picker value={value}/>
 </div>

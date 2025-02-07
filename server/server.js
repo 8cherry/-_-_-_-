@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import "./db.js";
 import {Category, User, Account, Goal, Transaction, sequelize} from "./db.js";
 
+import {Op} from "sequelize";
+
 process.on('unhandledRejection', function(reason, p){
   console.error('Произошла ошибка перехваченая глобальным хендлером', reason, p)
 
@@ -15,6 +17,7 @@ process.on('unhandledRejection', function(reason, p){
 
 const isPull = process.argv.includes('--pull')
 
+const isAlter = process.argv.includes('--alter')
 
 
 const doHandler = (callback) => {
@@ -131,17 +134,22 @@ async function createUserCategories(user_id) {
 // }
 
 
+// sequelize.sync({alter: true})
 
 if (isPull)
   sequelize.sync({force: true})
+if (isAlter)
+  sequelize.sync({alter: true})
+
 
 
 
 const app = express()
 
 app.use((err, req, res, next) => {
+  console.log('Ошибка перехвачена мидлваром ', err);
   console.error(err.stack)
-  res.status(500).send('Something broke!')
+  return res.status(500).send('Something broke!')
 })
 
 app.use(express.static('public'))
@@ -166,15 +174,39 @@ app.get('/accounts', async (request, response) => {
 });
 
 app.post('/account', async (request, response) => {
-  const { name, balance } = request.body
+  const { name, balance } = request.body;
 
-  let user = await Account.create( {name: name, balance: balance})
+  let user = await Account.create( {name, balance})
 
-  return Boolean(user);
+  return response.send(Boolean(user));
 });
 
+
+app.get('/categoryIn', async (request, response) => {
+  const transactions =  await Category.findAll({
+    where: {
+      type: 1
+    }
+  });
+
+  return response.send(transformDBResponse(transactions));
+})
+
+
+app.get('/categoryOut', async (request, response) => {
+  const transactions =  await Category.findAll({
+    where: {
+      type: 2
+    }
+  });
+
+  return response.send(transformDBResponse(transactions));
+})
+
+
+
 app.get('/category', async (request, response) => {
-  const transactions =  await Transaction.findAll();
+  const transactions =  await Category.findAll();
 
   return response.send(transformDBResponse(transactions));
 })
@@ -184,24 +216,68 @@ app.post('/category', async (request, response) => {
 
   let user = await Transaction.create( {date: Date.now(), description: '', amount: sum, type: 1} )
 
-  return Boolean(user);
+  return response.send(Boolean(user));
 })
 
-app.get('/transactions', async (request, response) => {
-  const transactions =  await Transaction.findAll();
+app.get('/goals', async (request, response) => {
+  const transactions =  await Goal.findAll();
 
+  return response.send(transformDBResponse(transactions));
+});
+
+app.post('/goal', async (request, response) => {
+  const { name, amount, deadline, startDate } = request.body
+
+  log(deadline, startDate);
+
+  let user = await Goal.create( {name: name,  amount, deadline, startDate})
+
+  return response.send(Boolean(user));
+});
+
+app.get('/transactions', async (request, response) => {
+  const where = {};
+
+  if (Boolean(request.query.account)) {
+    where.account_id = request.query.account
+  }
+
+  if (Boolean(request.query.category)) {
+    where.category_id = request.query.category
+  }
+
+  if (Boolean(request.query.type)) {
+    where.type = request.query.type
+  }
+
+  // if (Boolean(request.query.search)) {
+  //   where[Op.like] = "%" + request.query.search + "%";
+  //   // where.category_id = request.query.category
+  // }
+
+
+
+  const transactions =  await Transaction.findAll({
+    where,
+    include: [Category,Account],
+  });
+
+  
   return response.send(transformDBResponse(transactions));
 })
 
 
-app.post('/transactions', async (request, response) => {
-  const { sum, account_id, category_id} = request.body;
 
+app.post('/transaction', async (request, response) => {
+  const {  account_id, amount,description, category_id, type} = request.body;
+
+
+  log(account_id, category_id);
 
   let user = await Transaction.create( {date: Date.now(),
-    description: '', account_id, category_id, amount: sum, type: 1} )
+    description: description, account_id, category_id, amount: amount, type} )
 
-  return Boolean(user);
+  return response.send(Boolean(user));
 })
 
 app.post('/register', doHandler(async (request, response) => {

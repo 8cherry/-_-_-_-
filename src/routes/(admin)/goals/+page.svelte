@@ -1,18 +1,24 @@
 <script lang="ts">
     import DatePicker from "../../../shared/DatePicker.svelte";
-    import {createGoal} from "$entities/goal";
+    import {createGoal, getGoals} from "$entities/goal";
 
 
     const defaultForm = {
         startDate: '',
-        endDate: '',
+        deadline: '',
         name: '',
         amount: '',
     };
 
     let  form = $state(defaultForm);
 
+    let goals = $state([]);
+
     const fetchGoals = () => {
+        getGoals().then(res => {
+            goals = res;
+            console.log(goals);
+        })
 
     }
 
@@ -23,6 +29,8 @@
             fetchGoals()
         })
     }
+
+    fetchGoals();
 </script>
 
 <div class="card card-pink container mb-2 color-green">
@@ -33,11 +41,11 @@
         <div class="goal-form">
             <div class="goal-form--row" style="margin-bottom: 10px">
                 <input type="text" placeholder="Название" bind:value={form.name}>
-                <DatePicker bind:value={form.startDate}></DatePicker>
+                <DatePicker placeholder="Дата начала" bind:value={form.startDate}></DatePicker>
             </div>
             <div class="goal-form--row">
                 <input type="text" placeholder="Сумма" bind:value={form.amount}>
-                <DatePicker bind:value={form.endDate}></DatePicker>
+                <DatePicker  placeholder="Дата конца" bind:value={form.deadline}></DatePicker>
             </div>
         </div>
         <button type="submit">
@@ -48,17 +56,20 @@
 <div class="card goals--block color-fiolet card-yellow container">
     <h2 class="goals--block--title">Все цели</h2>
     <div class="goals--block-view">
+        {#each goals as goal}
         <div class="goals--block-view_card card color-pink card-fiolet">
             <h3>
-                На отпуск
+                {goal.name}
             </h3>
             <p class="color-green">
-                100 /1500
+                {goal.amount}
             </p>
             <h4>
-                До декабря 2025г
+                {(new Date(goal.deadline)).toLocaleDateString('ru-ru')}
             </h4>
         </div>
+        {/each}
+
     </div>
 </div>
 

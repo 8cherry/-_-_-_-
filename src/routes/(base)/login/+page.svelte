@@ -25,7 +25,12 @@
 		};
 
 		console.log(body)
-		doRegistrate(body);
+		doRegistrate(body).then(() => {
+			console.log('goto');
+			goto('/');
+		}).catch(e => {
+			alert(e)
+		});
 	}
 
 
@@ -44,8 +49,16 @@
 
 		authStore.doLogin(body).then(() => {
 			goto('/');
-		});
+		}).catch(e => {
+			alert(e)
+		});;
 	}
+
+	$effect(() => {
+		if (authStore.isAuthorized()) {
+			goto('/');
+		}
+	});
 
 </script>
 

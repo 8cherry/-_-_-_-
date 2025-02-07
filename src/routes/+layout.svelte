@@ -1,8 +1,20 @@
 <script lang="ts">
     import '../app.css';
+    import authStore from "$modules/auth/index.svelte.ts";
+	import {goto} from "$app/navigation";
 
-    let {children, auth} = $props();
 
+    let {children, auth, session} = $props();
+
+    if (session !== null) {
+        authStore.load(session);
+    }
+
+    console.log('is auth ', authStore.isAuthorized());
+
+    if (authStore.isAuthorized()) {
+        goto(`/`)
+    }
 </script>
 
 

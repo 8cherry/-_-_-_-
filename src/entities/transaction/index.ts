@@ -1,3 +1,5 @@
+import {PUBLIC_BACKEND_URL} from "$env/static/public";
+import {BackendFetch} from "$shared/api";
 
 export type TTransaction = {
     date: string,
@@ -8,7 +10,13 @@ export type TTransaction = {
 }
 
 export const createTransaction = async (data) => {
+    let response = await BackendFetch(PUBLIC_BACKEND_URL + '/transaction', {
+        method: 'POST',
+        body: JSON.stringify(data),
+    });
 
+
+    return response.json();
 }
 
 
@@ -16,24 +24,20 @@ export const getTransaction = async (id: string) => {
 
 }
 
-export const getTransactions = async () => {
+export const getTransactions = async (filters?: Record<string, any>) => {
+    let opts = '';
 
-    return [
-        {
-            date: '2014-01-01 15:32:12',
-            amount: '10000',
-            account: 'Карта',
-            category: 'Зарплата',
-            type: 1,
-        },
-        {
-            date: '2014-01-02 15:32:12',
-            amount: '2000',
-            account: 'Наличные',
-            category: 'Питание',
-            type: 2,
-        }
-    ]
+    if (filters) {
+        opts = '?' + new URLSearchParams(filters).toString();
+        console.log(opts);
+        
+    }
+
+
+    let response = await BackendFetch(PUBLIC_BACKEND_URL + '/transactions' + opts);
+
+
+    return response.json();
 }
 
 

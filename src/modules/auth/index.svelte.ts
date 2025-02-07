@@ -51,8 +51,7 @@ const doLogin = async (data: {email: string; password: string}) => {
 
 const doLogout = () => {
     store = null;
-
-    saveState();
+    saveState();    
 }
 
 

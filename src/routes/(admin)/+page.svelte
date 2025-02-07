@@ -2,7 +2,7 @@
 	import TransactionList from "$features/TransacrtionList/TransactionList.svelte";
 	import {getExpensesCategories, getIncomeCategories, type TCategory} from "$entities/category";
 	import {createAccount, getAccounts, type TAccount} from "$entities/account";
-	import {getTransactions} from "$entities/transaction";
+	import {getTransactions, createTransaction} from "$entities/transaction";
 
 	let formTransaction = $state(1);
 
@@ -16,6 +16,9 @@
 	let newAccounts = $state<Array<TAccount>>([]);
 
 	const addAccount = () => {
+		if (newAccounts.length) {
+			return newAccounts = [];
+		}
 		newAccounts.push({
 			type: 1,
 			name: '',
@@ -34,7 +37,13 @@
 		let account = newAccounts.splice(index, 1);
 		//todo save new accounts
 
-		createAccount(account);
+		if (account.length)
+			createAccount(account[0]).then(() => {
+				getAccounts().then(res => {
+		accounts = res;
+	})
+
+			});
 	}
 
 	let incomingCategories: Array<TCategory> = $state([])
@@ -48,6 +57,66 @@
 		expenseCategories = res;
 	})
 
+
+	const onSavePop = async (event) => {
+	event.preventDefault();
+
+
+		const form: HTMLFormElement = event.target as HTMLFormElement;
+
+
+
+		let account = form['account'].value;
+		let sum = form['sum'].value;
+		let category = form['category'].value;
+
+		let body = {
+			account_id: account,
+			amount: sum,
+			description: '',
+			category_id: category,
+			type: 1,
+		};
+
+		createTransaction(body).then(() => {
+				getTransactions().then(res => {
+				history = res;
+			});
+
+		});;
+	} 
+
+	const onSaveRas = async (event) => {
+		event.preventDefault();
+
+
+		const form: HTMLFormElement = event.target as HTMLFormElement;
+
+
+
+
+
+		let account = form['account'].value;
+		let sum = form['sum'].value;
+		let category = form['category'].value;
+
+		let body = {
+			account_id: Number(account),
+			amount: sum,
+			description: '',
+			category_id: Number(category),
+			type: 2,
+		};
+
+
+		createTransaction(body).then(() => {
+				getTransactions().then(res => {
+				history = res;
+			});
+
+		});
+
+	} 
 </script>
 
 <svelte:head>
@@ -62,6 +131,7 @@
 			<span id="openForm" onclick={addAccount}>
                +
             </span>
+			
 		</div>
 		{#each newAccounts as account, index}
 			<form onsubmit={() => saveNewAccount(index)}>
@@ -91,7 +161,8 @@
 				<button  onclick={formTransaction = 2} class={{'btn-active': formTransaction == 2, "rash": true }} >Расход</button>
 
 				{#if formTransaction == 1}
-					<form action="" method="post" class="dohod-form">
+					<form action="" method="post" onsubmit={onSavePop} class="dohod-form">
+						<div class='flex gap-2 align-items-center'>
 						<input type="text" placeholder="Введите сумму" name="sum">
 						<select id="select-accounts" name="account">
 							{#each accounts as account}
@@ -105,10 +176,12 @@
 								<option value={category.id}>{category.name}</option>
 							{/each}
 						</select>
+						</div>
 						<button id="vnesenie" type="submit">Пополнить</button>
 					</form>
 				{:else}
-					<form action="" method="post" class="dohod-form">
+					<form action="" method="post" onsubmit={onSaveRas} class="dohod-form">
+						<div class='flex gap-2 align-items-center'>
 						<input type="text" placeholder="Введите сумму" name="sum">
 						<select id="select-accounts" name="account">
 							{#each accounts as account}
@@ -122,6 +195,7 @@
 								<option value={category.id}>{category.name}</option>
 							{/each}
 						</select>
+						</div>
 						<button id="vnesenie" type="submit">Внести</button>
 					</form>
 				{/if}
@@ -139,6 +213,11 @@
 
 <style>
 
+	.align-items-center{
+		display: flex;
+		column-gap: 10px;
+		
+	}
 	h1 {
 		width: 100%;
 	}

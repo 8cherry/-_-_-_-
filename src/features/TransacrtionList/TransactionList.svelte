@@ -51,7 +51,7 @@
         return reslist;
     })
 
-    console.log(transactionSortedList);
+    console.log(transactionSortedList());
 
 </script>
 
@@ -63,10 +63,10 @@
         {#each dates.transactions as transaction}
             <div class='transactions--list-item'>
                 <span>
-                    {transaction.account}
+                    {transaction.Account?.name}
                 </span>
                 <span class="transactions--list-item-category">
-                    {transaction.category}
+                    {transaction.Category?.name}
                 </span>
                 <span class={transaction.type == 1 ? 'color-green' : 'color-pink'}>
                     {#if transaction.type == 1 }
@@ -86,6 +86,7 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        margin-bottom: 10px;
     }
     /*.transactions--list-item-category {*/
     /*    width: 100%;*/
